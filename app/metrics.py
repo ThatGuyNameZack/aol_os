@@ -1,12 +1,6 @@
-#used from fastapi import APIRouter
 from fastapi import APIRouter
 from fastapi.responses import Response
-from prometheus_client import (
-    Counter,
-    Histogram,
-    generate_latest,
-    CONTENT_TYPE_LATEST,
-)
+from prometheus_client import Counter, Histogram, generate_latest, CONTENT_TYPE_LATEST
 
 router = APIRouter()
 
@@ -22,4 +16,7 @@ REQUEST_LATENCY = Histogram(
 
 @router.get("/metrics")
 def metrics():
-    return Response(content=generate_latest(), media_type=CONTENT_TYPE_LATEST)
+    return Response(
+        content=generate_latest(),
+        media_type=CONTENT_TYPE_LATEST
+    )

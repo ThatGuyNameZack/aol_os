@@ -1,11 +1,17 @@
-# single threaded
-
-from fastapi import APIRouter
+from fastapi import FastAPI
 import time
+from app.metrics import router as metrics_router
 
-router = APIRouter()
+app = FastAPI()
 
-@router.get("/task")
+app.include_router(metrics_router)  # THIS IS REQUIRED
+
+def busy_wait(seconds):
+    end = time.time() + seconds
+    while time.time() < end:
+        pass
+
+@app.get("/task")
 def run_task():
-    time.sleep(1)  # simulate CPU work
+    busy_wait(1)
     return {"status": "done", "version": "A"}

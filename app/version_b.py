@@ -1,18 +1,19 @@
-#multi threading
-
-from fastapi import APIRouter
+from fastapi import FastAPI
 import asyncio
+from app.metrics import router as metrics_router
 
-router = APIRouter()
+app = FastAPI()
+
+app.include_router(metrics_router)  # THIS IS REQUIRED
 
 shared_counter = 0
 lock = asyncio.Lock()
 
-@router.get("/task")
+@app.get("/task")
 async def run_task():
     global shared_counter
 
-    async with lock:  # mutex
+    async with lock:
         temp = shared_counter
         await asyncio.sleep(0.1)
         shared_counter = temp + 1
